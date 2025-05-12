@@ -1,4 +1,4 @@
-import { getAllContacts, getContactsById } from '../services/contacts.js';
+import { getAllContacts, getContactsById, getContactsByName } from '../services/contacts.js';
 
 // ===================================Запити на сервер за всіма контактами
 export const getAllContactsController = async (req, res) => {
@@ -26,6 +26,37 @@ export const getAllContactsController = async (req, res) => {
     });
   }
 };
+
+// ===================================Запити на сервер за 1 контактом по його імені
+
+
+export const getContactByName = async (req, res) => {
+const name = req.query.name;
+  if (!name) {
+	  res.status(404).json({
+		  message: 'Contacts not found'
+	  });
+	  return;
+	}
+
+  try {
+    const regex = new RegExp(name, 'i');
+    const results = await getContactsByName(regex);
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Contacts not found' });
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: `Found ${results.length} contact(s) with name like "${name}"`,
+      data: results,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 
 // ===================================Запити на сервер за 1 контактом по його айді
 export const getContactById = async (req, res) => {

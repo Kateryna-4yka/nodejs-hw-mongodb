@@ -9,3 +9,7 @@ export const getContactsById = async (Id) => {
   const contactsById = await contactsCollection.findById(Id);
   return contactsById;
 };
+
+export const getContactsByName = async (nameRegex) => {
+  return await contactsCollection.find({ name: nameRegex });
+};
