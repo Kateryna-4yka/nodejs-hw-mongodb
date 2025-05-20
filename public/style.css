@@ -1,88 +1,111 @@
-/* Загальна стилізація */
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
-  color: #333;
-  padding: 50px 20px;
-  text-align: center;
-  min-height: 100vh;
+/* ============================================глобальні скидання стилів ========================================*/
+ul,
+ol {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style-type: none;
 }
 
-h1 {
-  color: #8d7c00;
-  margin-bottom: 40px;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-h1:hover {
-  transform: scale(1.03);
-}
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 30px;
+button {
+  cursor: pointer;
+  font-family: inherit;
+  color: currentColor;
 }
 
-input[type="text"] {
-  padding: 10px 14px;
-  font-size: 16px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  width: 220px;
-  transition: border-color 0.3s ease;
+.input {
+  font-family: inherit;
 }
 
-input[type="text"]:focus {
-  border-color: #8d7c00;
+/*скинути налаштування для філсетів (це як діви у модальному вікні) */
+.fieldset {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+* {
   outline: none;
 }
 
+/* ==============================================локальні стилі ================================================*/
 
-button {
-  padding: 10px 20px;
-  background-color: #8d7c00;
-  color: white;
-  font-size: 15px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+html, body {
+  height: 100%;
 }
 
-button:hover {
-  background-color: #c2b02b;
-  transform: scale(1.03);
+body {
+  font-family: "Kurale", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 25px;
+  padding: 40px;
+  background-image:   linear-gradient(rgba(255, 255, 255, 0.614), rgba(182, 171, 144, 0.601)), url(./fon.png);
+background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: rgb(85, 52, 12);
+
+  display: flex;
+  gap: 30px;
+  flex-direction: column;
+  align-items: center;
+}
+.form{
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  align-items: center;
 }
 
-
-table {
-  margin: 0 auto;
-  border-collapse: collapse;
-  width: 90%;
-  max-width: 800px;
-  background: white;
+.button-get-all, .btn-get, .btn-add,.btn-del{
+  width: 400px;
+  font-weight: 600;
+  padding: 10px 30px;
+  background-color: rgb(255, 234, 208);
   border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  border: none;
+  transition: all 300ms ease-in-out;
 }
 
-
-th {
-  background-color: #e9ecef;
-  text-transform: uppercase;
-  font-size: 13px;
-  color: #555;
-  padding: 14px;
+.button-get-all:hover, .btn-get:hover, .btn-add:hover, .btn-del:hover {
+  background-color: rgb(252, 222, 185);
+  transform: scale(1.05);
 }
 
-
-td {
-  padding: 14px;
-  border-bottom: 1px solid #eee;
+.input-get, .txt-add, .input-add {
+  width: 400px;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 10px 15px;
+  background-color: rgb(255, 244, 231);
+  border-radius: 10px;
+  border: none;
+  transition: all 300ms ease-in-out;
 }
+.input-get:hover, .txt-add:hover, .input-add:hover {
+  border: rgb(255, 255, 255);
 
-
-tr:hover {
-  background-color: #f1f1f1;
 }

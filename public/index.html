@@ -1,103 +1,58 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Книга контактів</title>
+  <title>Phone book</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kurale&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/3.0.1/modern-normalize.css" integrity="sha512-gnAN+RgTMylunXI7AMg+PtcUGpKZFkZJoFIkAWvdPFRrFJz3p2tx4+9xbjILRfN7CzoViMgS8vSf06fSQzWZjA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Книга контактів</h1>
+  <h1>Contacts</h1>
 
-  <div class="controls">
-    <button onclick="loadContacts()">Всі контакти</button>
-    <button onclick="clearTable()">Очистити</button>
+  <form class="form" id="search-form">
+    <button
+      class="button-get-all"
+      type="button">All contacts
+    </button>
 
-    <input type="text" id="nameSearchInput" placeholder="Пошук за ім’ям" />
-    <button onclick="searchContactByName()">Пошук</button>
+    <input
+      class="input-get"
+      type="text"
+      id="search-input"
+      placeholder="Enter name/number/email/id" />
+    <button
+      class="btn-get"
+      type="submit">Search
+    </button>
 
-    <input type="text" id="contactIdInput" placeholder="Пошук за ID" />
-    <button onclick="searchContactById()">Пошук</button>
+    <textarea
+      class="txt-add"
+      type="text"
+      id="txt-add"
+      placeholder="Make changes to contact or create a new one"></textarea>
+    <input
+      class="input-add"
+      type="text"
+      id="input-add"
+      placeholder="Enter id" />
+    <button
+      class="btn-add"
+      type="button">Add changes
+    </button>
+    <button
+      class="btn-del"
+      type="button">Delete contact
+    </button>
+  </form>
 
+  <div id="contacts-list"></div>
 
-  </div>
-
-  <table id="contacts-table">
-    <thead>
-      <tr>
-        <th>Ім’я</th>
-        <th>Телефон</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <script>
-    async function loadContacts() {
-      try {
-        const res = await fetch('/contacts');
-        const { data } = await res.json();
-        displayContacts(data);
-      } catch (error) {
-        alert('Помилка при завантаженні контактів');
-        console.error(error);
-      }
-    }
-
-    async function searchContactById() {
-      const id = document.getElementById('contactIdInput').value.trim();
-      if (!id) return alert('Введи ID контакту');
-
-      try {
-        const res = await fetch(`/contacts/${id}`);
-        if (res.status === 404) {
-          alert('Контакт не знайдено');
-          return;
-        }
-        const { data } = await res.json();
-        displayContacts([data]);
-      } catch (error) {
-        alert('Помилка при пошуку за ID');
-        console.error(error);
-      }
-    }
-
-    async function searchContactByName() {
-      const name = document.getElementById('nameSearchInput').value.trim();
-      if (!name) return alert('Введи ім’я для пошуку');
-
-      try {
-        const res = await fetch(`/contacts/search?name=${encodeURIComponent(name)}`);
-        if (res.status === 404) {
-          alert('Контакти не знайдено');
-          return;
-        }
-
-        const { data } = await res.json();
-        displayContacts(data);
-      } catch (error) {
-        alert('Помилка при пошуку за ім’ям');
-        console.error(error);
-      }
-    }
-
-    function clearTable() {
-      document.querySelector('#contacts-table tbody').innerHTML = '';
-    }
-
-    function displayContacts(contacts) {
-      const tbody = document.querySelector('#contacts-table tbody');
-      tbody.innerHTML = '';
-      contacts.forEach(contact => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${contact.name}</td>
-          <td>${contact.phoneNumber}</td>
-          <td>${contact.email ?? '-'}</td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
-  </script>
+  <script type="module" defer src="script.js"></script>
 </body>
 </html>

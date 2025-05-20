@@ -1,59 +1,40 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
-
+// ===================підключення HML==========================================================
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-
-import { getAllContactsController, getContactById, getContactByName } from './controllers/contacts.js';
+// ============================================================================================
+import contactsRouter from "./routers/contacts.routers.js";
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
 const PORT = 3000;
 
 export default function setupServer () {
-
-const app = express();
-
-  app.use(express.json());
+// =======================запускаємо роботу express()=========================================
+  const app = express();
+// =======================для розпарсювання джейсону (express.json())=========================
+  // app.use(express.json()); або в роутах точково на потрібні роути
+// =======================для запитів з інших шляхів (cors)===================================
   app.use(cors());
-
-  app.use(
-    pino({
-      transport: {
-        target: 'pino-pretty',
-      },
-    }),
-  );
-
-
-// ===================================Запити на сервер за всіма контактами
-app.get ("/contacts", getAllContactsController);
-
-// ===================================Запити на сервер за 1 контактом по його імені
-app.get("/contacts/search", getContactByName);
-
-// ===================================Запити на сервер за 1 контактом по його айді
-app.get ("/contacts/:id", getContactById);
-
-
+// =======================для великого та гарного тіла відповіді (pino-pretty)================
+  // app.use(
+  //   pino({
+  //     transport: {
+  //       target: 'pino-pretty',
+  //     },
+  //   }),
+  // );
+// =======================підключаємо роути для роботи з контактами===========================
+  app.use(contactsRouter);
+// =======================html підключення==================================
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, '..', 'public')));
-// ====================================Middlewares
-app.use((req, res, next) => {
-  res.status(404).json({
-    message: 'Not found',
-  });
-});
-
-app.use((err, req, res, next) => {
-  res.status(500).json({
-    message: 'Something went wrong',
-  });
-});
-
-
-
-
+// ===================================Міделвари помилок=========================
+app.use(notFoundHandler);
+app.use(errorHandler);
+// =======================запуск сервера на PORT================================
 app.listen (PORT, (er)=> {
     if (er) {throw er;}
     console.log(`Server is running on port ${PORT}`);
