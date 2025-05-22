@@ -71,7 +71,7 @@ export const postContactController = async (req, res) => {
 
     const newContact = await postContact(req.body);
 
-    res.json({
+    res.status(201).json({
         status: 201,
         message: `Successfully created a new contact!`,
         data: newContact,
