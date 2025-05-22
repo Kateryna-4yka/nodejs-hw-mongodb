@@ -1,20 +1,39 @@
 import { contactsCollection } from '../db/models/contact.js';
+import { calculatePaginationData } from '../utils/calculatePaginationData.js';
+import { SORT_ORDER } from '../constants/index.js';
 // ===================================GET all
-export const getAllContacts = async () => {
-  return await contactsCollection.find();
+export const getAllContacts = async ({
+  page = 1,
+  perPage = 10,
+  sortOrder = SORT_ORDER.ASC,
+  sortBy = 'name',
+  filter,
+
+}) => {
+  const limit = perPage;
+  const skip = page>0 ? (page - 1) * perPage : 0;
+
+  const contactQuery = contactsCollection.find();
+
+  if (typeof filter.contactType !== 'undefined') {
+    contactQuery.where("contactType").eq(filter.contactType);
+  };
+  if (typeof filter.isFavourite !== 'undefined') {
+    contactQuery.where("isFavourite").eq(filter.isFavourite);
+  };
+
+  const contactCount = await contactQuery.clone().countDocuments();
+
+  const contactsSortPagin = await contactQuery.skip(skip).limit(limit).sort({ [sortBy]: sortOrder }).exec();
+
+  const paginationData = calculatePaginationData(contactCount, perPage, page);
+
+  return {
+    data: contactsSortPagin,
+    ...paginationData,
+  };
 };
-// ===================================GET name
-export const getContactByName = async (ContactName) => {
-  return await contactsCollection.findOne({name: { $regex: ContactName, $options: "i" }});
-};
-// ===================================GET phone
-export const getContactByPhone = async (phoneNumber) => {
-  return await contactsCollection.findOne({ phoneNumber: phoneNumber });
-};
-// ===================================GET email
-export const getContactByEmail = async (email) => {
-  return await contactsCollection.findOne({ email: email });
-};
+
 // ===================================GET id
 export const getContactById = async (contactId) => {
   return await contactsCollection.findById(contactId);
@@ -27,19 +46,15 @@ export const postContact = async (payload) => {
 export const deleteContactById = async (contactId) => {
   return await contactsCollection.findOneAndDelete({_id: contactId});
 };
-// ===================================DELETE name
-export const deleteContactByName = async (ContactName) => {
-  return await contactsCollection.findOneAndDelete({name: { $regex: ContactName, $options: "i" }});
-};
-// ===================================PUT
+
+// ===================================PUT id
 export const putContactById = async (contactId, payload, options = {}) => {
 const putContact = await contactsCollection.findOneAndUpdate({ _id:contactId}, payload,{new: true, upsert: true,  includeResultMetadata: true, ...options},);
-
   return {value: putContact.value,
     updatedExisting: putContact.lastErrorObject.updatedExisting,
   };
 };
-// ===================================PATCH
+// ===================================PATCH id
 export const patchContactById = async (contactId, payload) => {
   return await contactsCollection.findOneAndUpdate({ _id:contactId}, payload, {new: true});
 };
