@@ -8,12 +8,13 @@ export const getAllContacts = async ({
   sortOrder = SORT_ORDER.ASC,
   sortBy = 'name',
   filter,
+  userId
 
 }) => {
   const limit = perPage;
   const skip = page>0 ? (page - 1) * perPage : 0;
 
-  const contactQuery = contactsCollection.find();
+  const contactQuery = contactsCollection.find({userId});
 
   if (typeof filter.contactType !== 'undefined') {
     contactQuery.where("contactType").eq(filter.contactType);
@@ -33,28 +34,27 @@ export const getAllContacts = async ({
     ...paginationData,
   };
 };
-
 // ===================================GET id
-export const getContactById = async (contactId) => {
-  return await contactsCollection.findById(contactId);
+export const getContactById = async (contactId, userId) => {
+  return await contactsCollection.findOne({_id: contactId, userId: userId});
 };
 // ===================================POST
 export const postContact = async (payload) => {
   return await contactsCollection.create(payload);
 };
 // ===================================DELETE id
-export const deleteContactById = async (contactId) => {
-  return await contactsCollection.findOneAndDelete({_id: contactId});
+export const deleteContactById = async (contactId, userId) => {
+  return await contactsCollection.findOneAndDelete({_id: contactId, userId: userId});
 };
 
 // ===================================PUT id
-export const putContactById = async (contactId, payload, options = {}) => {
-const putContact = await contactsCollection.findOneAndUpdate({ _id:contactId}, payload,{new: true, upsert: true,  includeResultMetadata: true, ...options},);
+export const putContactById = async (contactId, userId , payload, options = {}) => {
+const putContact = await contactsCollection.findOneAndUpdate({_id: contactId, userId: userId}, payload,{new: true, upsert: true,  includeResultMetadata: true, ...options},);
   return {value: putContact.value,
     updatedExisting: putContact.lastErrorObject.updatedExisting,
   };
 };
 // ===================================PATCH id
-export const patchContactById = async (contactId, payload) => {
-  return await contactsCollection.findOneAndUpdate({ _id:contactId}, payload, {new: true});
+export const patchContactById = async (contactId, userId, payload) => {
+  return await contactsCollection.findOneAndUpdate({_id: contactId, userId: userId}, payload, {new: true});
 };

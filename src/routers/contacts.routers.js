@@ -29,5 +29,6 @@ router.delete ("/contacts/:id", isValidId, ctrlWrapper(deleteContactByIdControll
 router.put ("/contacts/:id", jsonParser, isValidId, validateBody(createContactsSchema), ctrlWrapper(putContactByIdController));
 // ===================================PATCH id
 router.patch ("/contacts/:id", jsonParser, isValidId, validateBody(updateContactsSchema), ctrlWrapper(patchContactByIdController));
+
 export default router;
 
