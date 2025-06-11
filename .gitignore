@@ -2,6 +2,14 @@
 
 .env
 
+/src/temp/*
+!/src/tmp/.gitkeep
+
+
+/src/uploades/*
+
 .vscode
+
 .DS_Store
+
 .idea

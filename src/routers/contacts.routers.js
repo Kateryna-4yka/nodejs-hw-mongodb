@@ -13,22 +13,24 @@ import express from 'express';
 import { validateBody } from "../middlewares/validateBody.js";
 import { createContactsSchema, updateContactsSchema } from "../validation/contacts.validation.shema.js";
 import { isValidId } from "../middlewares/isValidId.js";
+import { upload } from '../middlewares/multer.js';
+
 
 const jsonParser = express.json();
 const router = Router();
 
 // ===================================GET all
-router.get ("/contacts", ctrlWrapper(getAllContactsController));
+router.get ("/", ctrlWrapper(getAllContactsController));
 // ===================================GET id
-router.get ("/contacts/:id", isValidId, ctrlWrapper(getContactByIdController));
+router.get ("/:id", isValidId, ctrlWrapper(getContactByIdController));
 // ===================================POST
-router.post ("/contacts", jsonParser, validateBody(createContactsSchema), ctrlWrapper(postContactController));
+router.post ("/", jsonParser, upload.single('photo'), validateBody(createContactsSchema), ctrlWrapper(postContactController));
 // ===================================DELETE id
-router.delete ("/contacts/:id", isValidId, ctrlWrapper(deleteContactByIdController));
+router.delete ("/:id", isValidId, ctrlWrapper(deleteContactByIdController));
 // ===================================PUT id
-router.put ("/contacts/:id", jsonParser, isValidId, validateBody(createContactsSchema), ctrlWrapper(putContactByIdController));
+router.put ("/:id", jsonParser, isValidId, upload.single('photo'), validateBody(createContactsSchema), ctrlWrapper(putContactByIdController));
 // ===================================PATCH id
-router.patch ("/contacts/:id", jsonParser, isValidId, validateBody(updateContactsSchema), ctrlWrapper(patchContactByIdController));
+router.patch ("/:id", jsonParser, isValidId, upload.single('photo'), validateBody(updateContactsSchema), ctrlWrapper(patchContactByIdController));
+// якщо хочемо зберігати одразу багато фоток від користувача, тоді пише upload.array('photo', 10), тут 10 це ліміт фоток на  завантаження
 
 export default router;
-

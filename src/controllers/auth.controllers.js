@@ -1,6 +1,6 @@
 // ===================================post user
 
-import { loginUser, refreshUsersSession, registerUser, logoutUser } from '../services/auth.services.js';
+import { loginUser, refreshUsersSession, registerUser, logoutUser, requestResetToken, resetPassword } from '../services/auth.services.js';
 import { THIRTY_DAYS, FIFTEEN_MINUTES } from '../constants/index.js';
 
 
@@ -18,9 +18,6 @@ const setupSession = (res, session) => {
     expires: new Date(Date.now() + FIFTEEN_MINUTES),
   });
 };
-
-
-
 export const registerUserController = async (req, res) => {
   const user = await registerUser(req.body);
 
@@ -60,10 +57,7 @@ export const logoutUserController = async (req, res) => {
 
   res.status(204).end();
 };
-
-
 // ===================================рефреш сесії
-
 export const refreshUserSessionController = async (req, res) => {
   const session = await refreshUsersSession({
     sessionId: req.cookies.sessionId,
@@ -78,5 +72,30 @@ export const refreshUserSessionController = async (req, res) => {
     data: {
       accessToken: session.accessToken,
     },
+  });
+};
+// ================контролер для обробки запиту на зміну пароля
+export const requestResetEmailController = async (req, res) => {
+const {email} = req.body;
+if (!email) {
+      return res.status(400).json({ status: 'error', message: 'Email is required' });
+    }
+
+  await requestResetToken(email);
+  res.json({
+    status: 200,
+    message: "Reset password email has been successfully sent.",
+    data: {}
+  });
+};
+
+export const resetPasswordController = async (req, res) => {
+
+  const {password, token} = req.body;
+
+  await resetPassword({password, token});
+  res.json({
+    message: 'Password has been successfully reset.',
+    status: 200,
   });
 };

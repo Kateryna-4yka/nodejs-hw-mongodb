@@ -2,7 +2,6 @@ function parseInfoIsFavourite (filterBy) {
     if (filterBy === 'undefined') {
         return undefined;
     }
-
     return filterBy;
 }
 

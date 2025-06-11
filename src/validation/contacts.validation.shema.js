@@ -31,6 +31,7 @@ export const createContactsSchema = Joi.object({
 		  }
 		  return true;
 	}),
+  photo:  Joi.string(),
 });
 
 

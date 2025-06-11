@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
@@ -9,6 +10,8 @@ import { fileURLToPath } from 'url';
 import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import { UPLOAD_DIR } from './constants/index.js';
+
 
 const PORT = 3000;
 
@@ -33,11 +36,14 @@ export default function setupServer () {
       },
     }),
   );
+// ================Додамо можливість роздавати статичні файл==================
+  app.use('/uploads', express.static(UPLOAD_DIR));
+  // можливість віддавати файли користувачу за його запитом
 
 // ================підключаємо роути для роботи з контактами===================
   app.use(router);
 
-// =======================html підключення==================================
+  // =======================html підключення==================================
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 

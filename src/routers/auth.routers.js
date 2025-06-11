@@ -5,10 +5,12 @@ import {
     registerUserController,
     loginUserController,
     refreshUserSessionController,
-    logoutUserController
+    logoutUserController,
+    requestResetEmailController,
+    resetPasswordController
 }from '../controllers/auth.controllers.js';
 import { validateBody } from '../middlewares/validateBody.js';
-import { registerUserSchema, loginUserSchema} from '../validation/auth.validation.shema.js';
+import { registerUserSchema, loginUserSchema, requestResetEmailSchema, resetPasswordSchema } from '../validation/auth.validation.shema.js';
 import express from 'express';
 
 const jsonParser = express.json();
@@ -18,5 +20,8 @@ router.post('/register', jsonParser, validateBody(registerUserSchema), ctrlWrapp
 router.post('/login', jsonParser, validateBody(loginUserSchema), ctrlWrapper(loginUserController),);
 router.post('/logout', ctrlWrapper(logoutUserController));
 router.post('/refresh', ctrlWrapper(refreshUserSessionController));
+router.post('/send-reset-email', jsonParser, validateBody(requestResetEmailSchema),  ctrlWrapper(requestResetEmailController), );
+router.post('/reset-pwd', jsonParser, validateBody(resetPasswordSchema), ctrlWrapper(resetPasswordController),);
+
 
 export default router;

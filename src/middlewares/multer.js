@@ -1,0 +1,16 @@
+import multer from 'multer';
+import { TEMP_UPLOAD_DIR } from '../constants/index.js';
+
+// приймає запит, файл , що завантажується, та функцію , яка каже де саме зберігаємо файл
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, TEMP_UPLOAD_DIR);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now();
+    cb(null, `${uniqueSuffix}_${file.originalname}`);
+  },
+});
+
+export const upload = multer({ storage });
