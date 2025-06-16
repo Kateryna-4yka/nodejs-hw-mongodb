@@ -1,0 +1,69 @@
+tags:
+  - Contacts
+summary: Create or update contact by id (upsert)
+operationId: PutContactById
+description: "Update existing contact by id or create new one if not exists."
+security:
+  - bearerAuth: []
+
+parameters:
+  - in: path
+    name: id
+    required: true
+    description: Contact ID to update or create
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598384'
+
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        $ref: '../../../components/schemas/contactInput.yaml'
+
+        
+responses:
+  '200':
+    description: Successfully updated contact!
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully updated contact!
+            data:
+              $ref: '../../../components/schemas/contacts.yaml'
+  '201':
+    description: Successfully created new contact
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully created a new contact Lola Palola!
+            data:
+              $ref: '../../../components/schemas/contacts.yaml'
+  '400':
+    $ref: '../../../components/responses/400.yaml'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '500':
+    $ref: '../../../components/responses/500.yaml'

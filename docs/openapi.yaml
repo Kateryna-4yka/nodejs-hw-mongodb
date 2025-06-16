@@ -1,0 +1,75 @@
+
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: My notebook
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description:
+    Documentation for the My Notebook application.
+
+tags:
+  - name: Contacts
+    description: Operations with contacts.
+  - name: Auth
+    description: Auth operations.
+
+servers:
+  - url: http://127.0.0.1:3000
+  - url: https://nodejs-hw-mongodb-1-1gfq.onrender.com
+
+paths:
+  /contacts:
+    get:
+      $ref: '../swagger/paths/contacts/get.yaml'
+    post:
+      $ref: '../swagger/paths/contacts/post.yaml'
+  /contacts/{id}:
+    get:
+      $ref: '../swagger/paths/contacts/id/get.yaml'
+    patch:
+      $ref: '../swagger/paths/contacts/id/patch.yaml'
+    delete:
+      $ref: '../swagger/paths/contacts/id/delete.yaml'
+    put:
+      $ref: '../swagger/paths/contacts/id/put.yaml'
+
+
+
+  /auth/register:
+    post:
+      $ref: '../swagger/paths/auth/registerUser.yaml'
+  /auth/login:
+    post:
+      $ref: '../swagger/paths/auth/loginUser.yaml'
+  /auth/logout:
+    post:
+      $ref: '../swagger/paths/auth/logoutUser.yaml'
+  /auth/refresh:
+    post:
+      $ref: '../swagger/paths/auth/refreshToken.yaml'
+  /auth/send-reset-email:
+    post:
+      $ref: '../swagger/paths/auth/sendResetEmail.yaml'
+  /auth/reset-pwd:
+    post:
+      $ref: '../swagger/paths/auth/resetPWD.yaml'
+  /get-oauth-url:
+    get:
+      $ref: '../swagger/paths/auth/getOauthUrl.yaml'
+  /confirm-oauth:
+    post:
+      $ref: '../swagger/paths/auth/confirmOauth.yaml'
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionId
+

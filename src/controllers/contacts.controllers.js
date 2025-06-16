@@ -132,7 +132,7 @@ export const patchContactByIdController = async (req, res, next) => {
 	// 	  path: '/Users/borysmeshkov/Projects/goit-study/students-app/temp/1710709919677_download.jpeg',
 	// 	  size: 7
 	// }
-console.log('req.file:', req.file);
+// console.log('req.file:', req.file);
     const updateContact = await patchContactById(contactId, userId, updatedData);
 
     if (updateContact===null) {

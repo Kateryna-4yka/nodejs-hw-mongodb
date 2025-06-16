@@ -1,0 +1,50 @@
+tags:
+  - Contacts
+summary: Update contact
+operationId: PatchContact
+description: 'Update contact'
+security:
+- bearerAuth: []
+
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598384'
+
+
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        $ref: '../../../components/schemas/contactInput.yaml'
+
+
+
+responses:
+  '200':
+    description: 'Successfully updated Lola Palola contact!'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: 'Successfully updated Lola Palola contact!'
+            data:
+              type: object
+              $ref: '../../../components/schemas/contacts.yaml'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '500':
+    $ref: '../../../components/responses/500.yaml'

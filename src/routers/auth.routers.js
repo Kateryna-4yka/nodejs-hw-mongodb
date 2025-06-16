@@ -7,11 +7,14 @@ import {
     refreshUserSessionController,
     logoutUserController,
     requestResetEmailController,
-    resetPasswordController
+    resetPasswordController,
+    loginWithGoogleController
 }from '../controllers/auth.controllers.js';
 import { validateBody } from '../middlewares/validateBody.js';
-import { registerUserSchema, loginUserSchema, requestResetEmailSchema, resetPasswordSchema } from '../validation/auth.validation.shema.js';
+import { registerUserSchema, loginUserSchema, requestResetEmailSchema, resetPasswordSchema, loginWithGoogleOAuthSchema } from '../validation/auth.validation.shema.js';
 import express from 'express';
+import { getGoogleOAuthUrlController } from '../controllers/auth.controllers.js';
+
 
 const jsonParser = express.json();
 const router = Router();
@@ -22,6 +25,7 @@ router.post('/logout', ctrlWrapper(logoutUserController));
 router.post('/refresh', ctrlWrapper(refreshUserSessionController));
 router.post('/send-reset-email', jsonParser, validateBody(requestResetEmailSchema),  ctrlWrapper(requestResetEmailController), );
 router.post('/reset-pwd', jsonParser, validateBody(resetPasswordSchema), ctrlWrapper(resetPasswordController),);
-
-
+router.get('/get-oauth-url', ctrlWrapper(getGoogleOAuthUrlController));
+router.post('/confirm-oauth', jsonParser, validateBody(loginWithGoogleOAuthSchema), ctrlWrapper(loginWithGoogleController),
+);
 export default router;

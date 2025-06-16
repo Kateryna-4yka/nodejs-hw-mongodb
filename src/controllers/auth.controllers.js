@@ -2,7 +2,8 @@
 
 import { loginUser, refreshUsersSession, registerUser, logoutUser, requestResetToken, resetPassword } from '../services/auth.services.js';
 import { THIRTY_DAYS, FIFTEEN_MINUTES } from '../constants/index.js';
-
+import { generateAuthUrl } from '../utils/googleOAuth2.js';
+import { loginOrSignupWithGoogle } from '../services/auth.services.js';
 
 //  створення куків , які ми вже глобально підключили в сервер.джіс
 // викликаємо метод кукі (назва куки, значення цієї куки, опції до нех,
@@ -97,5 +98,34 @@ export const resetPasswordController = async (req, res) => {
   res.json({
     message: 'Password has been successfully reset.',
     status: 200,
+  });
+};
+
+
+// тут ми створюємо запит на отримання посилання авторизації
+
+export const getGoogleOAuthUrlController = async (req, res) => {
+  const url = generateAuthUrl();
+  res.json({
+    status: 200,
+    message: 'Successfully get Google OAuth url!',
+    data: {
+      url,
+    },
+  });
+};
+
+
+
+export const loginWithGoogleController = async (req, res) => {
+  const session = await loginOrSignupWithGoogle(req.body.code);
+  setupSession(res, session);
+
+  res.json({
+    status: 200,
+    message: 'Successfully logged in via Google OAuth!',
+    data: {
+      accessToken: session.accessToken,
+    },
   });
 };

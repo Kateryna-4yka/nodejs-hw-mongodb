@@ -11,7 +11,7 @@ import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { UPLOAD_DIR } from './constants/index.js';
-
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 const PORT = 3000;
 
@@ -19,6 +19,10 @@ export default function setupServer () {
 // =======================запускаємо роботу express()=========================================
   const app = express();
 
+// ===================================документація до застосунку========================
+  app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('/api-docs', swaggerDocs());
+  
   //  =======================Для роботи із куками =============================
   app.use(cookieParser());
 
@@ -50,6 +54,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 // ===================================Міделвари помилок=========================
 app.use(notFoundHandler);
 app.use(errorHandler);
+
 
 // =======================запуск сервера на PORT================================
 app.listen (PORT, (er)=> {

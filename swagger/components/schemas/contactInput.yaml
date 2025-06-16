@@ -1,0 +1,27 @@
+type: object
+required:
+  - name
+  - contactType
+properties:
+  name:
+    type: string
+    description: Contact's name
+    example: Lola Palola
+  contactType:
+    type: string
+    enum: ['work', 'home', 'personal']
+    default: 'personal'
+    example: work
+  phoneNumber:
+    type: string
+    example: '+380931122303'
+  email:
+    type: string
+    example: example@gmail.com
+  isFavourite:
+    type: boolean
+    example: false
+  photo:
+    type: string
+    format: binary
+    description: Contact's photo

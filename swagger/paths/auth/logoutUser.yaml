@@ -1,0 +1,16 @@
+tags:
+  - Auth
+summary: Logout user
+operationId: logoutUser
+description: Logout user by clearing session cookies.
+
+security:
+  - cookieAuth: []
+  
+responses:
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '204':
+    $ref: '../../components/responses/204.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'

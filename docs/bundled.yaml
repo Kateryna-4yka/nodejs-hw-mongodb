@@ -1,0 +1,861 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: My notebook
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: Documentation for the My Notebook application.
+servers:
+  - url: http://127.0.0.1:3000
+tags:
+  - name: Contacts
+    description: Operations with contacts.
+  - name: Auth
+    description: Auth operations.
+paths:
+  /contacts:
+    get:
+      tags:
+        - Contacts
+      summary: Get all contacts
+      operationId: GetAllContacts
+      description: Get all contacts added by this user
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            example: 1
+        - in: query
+          name: perPage
+          schema:
+            type: integer
+            example: 10
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum:
+              - _id
+              - name
+              - isFavourite
+              - contactType
+            example: isFavourite
+          description: All contacts's fields can be sorted. Default value - name
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            example: asc
+        - in: query
+          name: isFavourite
+          schema:
+            type: boolean
+            example: false
+        - in: query
+          name: contactType
+          schema:
+            type: string
+            enum:
+              - work
+              - home
+              - personal
+            example: personal
+      responses:
+        '200':
+          description: Successfully found contacts!
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                  - data
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Successfully found contacts!
+                  data:
+                    type: object
+                    required:
+                      - data
+                      - page
+                      - perPage
+                      - totalItems
+                      - totalPages
+                      - hasNextPage
+                      - hasPreviousPage
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/contacts'
+                      page:
+                        type: number
+                        example: 5
+                      perPage:
+                        type: number
+                        example: 10
+                      totalItems:
+                        type: number
+                        example: 4
+                      totalPages:
+                        type: number
+                        example: 4
+                      hasNextPage:
+                        type: boolean
+                        example: false
+                      hasPreviousPage:
+                        type: boolean
+                        example: true
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - Contacts
+      summary: Create contact
+      operationId: PostContact
+      description: Create new contact
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/contactInput'
+      responses:
+        '201':
+          description: Post contact
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                  - data
+                properties:
+                  status:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Successfully created a new contact!
+                  data:
+                    type: object
+                    $ref: '#/components/schemas/contacts'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  /contacts/{id}:
+    get:
+      tags:
+        - Contacts
+      summary: Get contact by id
+      operationId: GetContactById
+      description: Get contact by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: 65ca67e7ae7f10c88b598384
+      responses:
+        '200':
+          description: Get contact by id
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                  - data
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Successfully found contact with id 65ca67e7ae7f10c88b598384!
+                  data:
+                    type: object
+                    $ref: '#/components/schemas/contacts'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      tags:
+        - Contacts
+      summary: Update contact
+      operationId: PatchContact
+      description: Update contact
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/contactInput'
+      responses:
+        '200':
+          description: Successfully updated Lola Palola contact!
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                  - data
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Successfully updated Lola Palola contact!
+                  data:
+                    type: object
+                    $ref: '#/components/schemas/contacts'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - Contacts
+      summary: Delete contact by id
+      operationId: DeleteContactById
+      description: Delete contact by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: 65ca67e7ae7f10c88b598384
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Contacts
+      summary: Create or update contact by id (upsert)
+      operationId: PutContactById
+      description: Update existing contact by id or create new one if not exists.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Contact ID to update or create
+          schema:
+            type: string
+            example: 65ca67e7ae7f10c88b598384
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/contactInput'
+      responses:
+        '200':
+          description: Successfully updated contact!
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                  - data
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Successfully updated contact!
+                  data:
+                    $ref: '#/components/schemas/contacts'
+        '201':
+          description: Successfully created new contact
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                  - data
+                properties:
+                  status:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Successfully created a new contact Lola Palola!
+                  data:
+                    $ref: '#/components/schemas/contacts'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register a new user
+      operationId: registerUser
+      description: Register a new user with email and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: strongPassword123
+      responses:
+        '201':
+          description: Successfully registered a user!
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                  - data
+                properties:
+                  status:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Successfully registered a user!
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 64b2f8d9c56b5e7f12345678
+                      email:
+                        type: string
+                        example: user@example.com
+        '400':
+          $ref: '#/components/responses/400'
+        '409':
+          $ref: '#/components/responses/409'
+        '500':
+          $ref: '#/components/responses/500'
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login user
+      operationId: loginUser
+      description: Login user with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: strongPassword123
+      responses:
+        '200':
+          description: Successfully logged in a user!
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                  - data
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Successfully logged in an user!
+                  data:
+                    type: object
+                    required:
+                      - accessToken
+                    properties:
+                      accessToken:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: Logout user
+      operationId: logoutUser
+      description: Logout user by clearing session cookies.
+      security:
+        - cookieAuth: []
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '500':
+          $ref: '#/components/responses/500'
+  /auth/refresh:
+    post:
+      tags:
+        - Auth
+      summary: Refresh user token
+      operationId: refreshToken
+      description: Refresh user token
+      responses:
+        '200':
+          description: Successfully refreshed a session!
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                  - data
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Successfully refreshed a session!
+                  data:
+                    type: object
+                    required:
+                      - accessToken
+                    properties:
+                      accessToken:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /auth/send-reset-email:
+    post:
+      tags:
+        - Auth
+      summary: Send email for password reset
+      operationId: sendResetEmail
+      description: Sends a reset password link to the user's email.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+      responses:
+        '200':
+          description: Reset password email has been successfully sent.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                  - data
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Reset password email has been successfully sent.
+                  data:
+                    type: object
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /auth/reset-pwd:
+    post:
+      tags:
+        - Auth
+      summary: Reset user password
+      operationId: resetPassword
+      description: Resets the user's password using the reset token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+                - token
+              properties:
+                password:
+                  type: string
+                  format: password
+                  example: strongPassword123
+                token:
+                  type: string
+                  example: reset-token-string
+      responses:
+        '200':
+          description: Password has been successfully reset.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Password has been successfully reset.
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /get-oauth-url:
+    get:
+      tags:
+        - Auth
+      summary: Get Google OAuth url
+      operationId: getOAuthUrl
+      description: Get Google OAuth url
+      responses:
+        '200':
+          description: Successfully get Google OAuth url!
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                  - data
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Successfully get Google OAuth url!
+                  data:
+                    type: object
+                    required:
+                      - url
+                    properties:
+                      url:
+                        type: string
+                        format: uri
+                        example: https://accounts.google.com/o/oauth2/auth?client_id=...
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /confirm-oauth:
+    post:
+      tags:
+        - Auth
+      summary: Login with Google
+      operationId: confirmOauth
+      description: Login with Google
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - code
+              properties:
+                code:
+                  type: string
+                  example: 4/0AX4XfWhZ...
+      responses:
+        '200':
+          description: Successfully logged in via Google OAuth!
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - message
+                  - data
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Successfully logged in via Google OAuth!
+                  data:
+                    type: object
+                    required:
+                      - accessToken
+                    properties:
+                      accessToken:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionId
+  schemas:
+    contacts:
+      type: object
+      required:
+        - _id
+        - name
+        - phoneNumber
+        - contactType
+        - userId
+        - createdAt
+        - updatedAt
+      properties:
+        _id:
+          description: Contact's id
+          type: string
+          example: 65e4decdd286b30065d54af9
+        name:
+          description: Contact's name
+          type: string
+          example: Lola Palola
+        phoneNumber:
+          description: The contact's phone number
+          type: string
+          example: '+380931122303'
+        email:
+          description: Contact's email
+          type: string
+          example: example@gmail.com
+        isFavourite:
+          description: Favorite or unfavorite contact
+          type: boolean
+          example: false
+        contactType:
+          description: Which contact group the contact belongs to
+          type: string
+          enum:
+            - work
+            - home
+            - personal
+          default: personal
+          example: work
+        photo:
+          description: Link to contact's photo
+          type: string
+          example: https://res.cloudinary.com/dktjavxqc/image/upload/v1749681213/h1fqxuobjmdppdyak5ok.jpg
+        createdAt:
+          type: string
+          format: date-time
+          description: Contact created at
+          example: '2025-06-14T16:41:11.948+00:00'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Updated created at
+          example: '2025-06-14T16:41:11.948+00:00'
+    contactInput:
+      type: object
+      required:
+        - name
+        - contactType
+      properties:
+        name:
+          type: string
+          description: Contact's name
+          example: Lola Palola
+        contactType:
+          type: string
+          enum:
+            - work
+            - home
+            - personal
+          default: personal
+          example: work
+        phoneNumber:
+          type: string
+          example: '+380931122303'
+        email:
+          type: string
+          example: example@gmail.com
+        isFavourite:
+          type: boolean
+          example: false
+        photo:
+          type: string
+          format: binary
+          description: Contact's photo
+  responses:
+    '204':
+      description: The operation was successful.
+    '400':
+      '400':
+        description: Bad Request — invalid input data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  example: 400
+                message:
+                  type: string
+                  example: Invalid request data
+    '401':
+      description: Unauthorized error
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - status
+              - message
+              - data
+            properties:
+              status:
+                type: integer
+                example: 401
+              message:
+                type: string
+                example: UnauthorizedError
+              data:
+                type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+                    example: Access token expired
+    '404':
+      description: There are no contacts in the notebook yet!
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - status
+              - message
+            properties:
+              status:
+                type: integer
+                example: 404
+              message:
+                type: string
+                example: There are no contacts in the notebook yet!
+    '409':
+      '409':
+        description: Email in use
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+                - message
+              properties:
+                status:
+                  type: integer
+                  example: 409
+                message:
+                  type: string
+                  example: Email already in use
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - status
+              - message
+            properties:
+              status:
+                type: integer
+                example: 500
+              message:
+                type: string
+                example: Internal Server Error
