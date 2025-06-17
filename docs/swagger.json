@@ -11,6 +11,9 @@
   },
   "servers": [
     {
+      "url": "https://nodejs-hw-mongodb-1-1gfq.onrender.com"
+    },
+    {
       "url": "http://127.0.0.1:3000"
     }
   ],
@@ -322,6 +325,17 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -517,6 +531,7 @@
         "summary": "Register a new user",
         "operationId": "registerUser",
         "description": "Register a new user with email and password.",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -602,6 +617,7 @@
         "summary": "Login user",
         "operationId": "loginUser",
         "description": "Login user with email and password",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -692,6 +708,9 @@
           "204": {
             "$ref": "#/components/responses/204"
           },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
           "500": {
             "$ref": "#/components/responses/500"
           }
@@ -706,6 +725,7 @@
         "summary": "Refresh user token",
         "operationId": "refreshToken",
         "description": "Refresh user token",
+        "security": [],
         "responses": {
           "200": {
             "description": "Successfully refreshed a session!",
@@ -761,6 +781,7 @@
         "summary": "Send email for password reset",
         "operationId": "sendResetEmail",
         "description": "Sends a reset password link to the user's email.",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -827,6 +848,7 @@
         "summary": "Reset user password",
         "operationId": "resetPassword",
         "description": "Resets the user's password using the reset token.",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -894,6 +916,7 @@
         "summary": "Get Google OAuth url",
         "operationId": "getOAuthUrl",
         "description": "Get Google OAuth url",
+        "security": [],
         "responses": {
           "200": {
             "description": "Successfully get Google OAuth url!",
@@ -950,6 +973,7 @@
         "summary": "Login with Google",
         "operationId": "confirmOauth",
         "description": "Login with Google",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -1144,21 +1168,19 @@
         "description": "The operation was successful."
       },
       "400": {
-        "400": {
-          "description": "Bad Request — invalid input data",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "status": {
-                    "type": "integer",
-                    "example": 400
-                  },
-                  "message": {
-                    "type": "string",
-                    "example": "Invalid request data"
-                  }
+        "description": "Bad Request — invalid input data",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 400
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Invalid request data"
                 }
               }
             }
@@ -1227,25 +1249,23 @@
         }
       },
       "409": {
-        "409": {
-          "description": "Email in use",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "status",
-                  "message"
-                ],
-                "properties": {
-                  "status": {
-                    "type": "integer",
-                    "example": 409
-                  },
-                  "message": {
-                    "type": "string",
-                    "example": "Email already in use"
-                  }
+        "description": "Email in use",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 409
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Email already in use"
                 }
               }
             }
